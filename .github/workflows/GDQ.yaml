@@ -8,15 +8,12 @@ on:
 
 jobs:
   build:
-    name: Build OpenWrt firmware
     runs-on: ubuntu-latest
     if: github.event.repository.owner.id == github.event.sender.id
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          ref: main
+        uses: actions/checkout@main
 
       - name: Clone source code
         env:
@@ -102,6 +99,13 @@ jobs:
             v${{ github.run_number }}
           draft: false
           prerelease: false
+
+      # config
+      - name: Upload firmware
+        uses: actions/upload-artifact@v3
+        with:
+          name: OpenWrt_config
+          path: ./openwrt/.config
 
       # firmware
       - name: Upload firmware
