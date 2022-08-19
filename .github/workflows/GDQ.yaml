@@ -112,7 +112,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: OpenWrt_firmware
-          path: ../artifact/firmware/
+          path: ./artifact/firmware/
 
       - name: Upload release asset
         if: github.event == 'release'
@@ -120,5 +120,5 @@ jobs:
         with:
           repo_token: ${{ secrets.YOURTOKEN }}
           tag: ${{ github.ref }}
-          file: ../artifact/firmware/*
+          file: ./artifact/firmware/*
           file_glob: true
