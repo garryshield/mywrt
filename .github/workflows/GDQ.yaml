@@ -105,6 +105,6 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.YOURTOKEN }}
-          file: ../artifact/firmware/*
           tag: ${{ github.ref }}
+          file: ../artifact/firmware/*
           file_glob: true
