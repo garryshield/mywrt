@@ -103,17 +103,17 @@ jobs:
           prerelease: false
 
       # firmware
-      - name: Upload firmware
-        uses: actions/upload-artifact@v3
-        with:
-          name: OpenWrt_firmware
-          path: ./artifact/firmware/
-
       - name: Archive firmware
         uses: thedoctor0/zip-release@main
         with:
           path: ./artifact/firmware/
           filename: OpenWrt_firmware.zip
+
+      - name: Upload firmware
+        uses: actions/upload-artifact@v3
+        with:
+          name: OpenWrt_firmware
+          path: OpenWrt_firmware.zip
 
       - name: Release firmware
         uses: actions/upload-release-asset@v1
@@ -126,17 +126,17 @@ jobs:
           asset_content_type: application/zip
 
       # package
-      - name: Upload package
-        uses: actions/upload-artifact@v3
-        with:
-          name: OpenWrt_package
-          path: ./artifact/package/
-
       - name: Archive package
         uses: thedoctor0/zip-release@main
         with:
           path: ./artifact/package/
           filename: OpenWrt_package.zip
+
+      - name: Upload package
+        uses: actions/upload-artifact@v3
+        with:
+          name: OpenWrt_package
+          path: OpenWrt_package.zip
 
       - name: Release package
         uses: actions/upload-release-asset@v1
@@ -149,17 +149,17 @@ jobs:
           asset_content_type: application/zip
 
       # buildinfo
-      - name: Upload buildinfo
-        uses: actions/upload-artifact@v3
-        with:
-          name: OpenWrt_buildinfo
-          path: ./artifact/buildinfo/
-
       - name: Archive buildinfo
         uses: thedoctor0/zip-release@main
         with:
           path: ./artifact/buildinfo/
           filename: OpenWrt_buildinfo.zip
+
+      - name: Upload buildinfo
+        uses: actions/upload-artifact@v3
+        with:
+          name: OpenWrt_buildinfo
+          path: OpenWrt_buildinfo.zip
 
       - name: Release buildinfo
         uses: actions/upload-release-asset@v1
