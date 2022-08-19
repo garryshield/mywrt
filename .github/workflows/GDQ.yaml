@@ -103,6 +103,7 @@ jobs:
       - name: Prepare artifact
         run: |
           cd openwrt
+          le -sl ./
           mkdir -p ../artifact/firmware
           cp -rf ./config/* ../artifact/firmware/
 
