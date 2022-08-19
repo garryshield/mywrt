@@ -80,6 +80,12 @@ jobs:
       #     cp -rf $(find ./openwrt/bin/packages/ -type f -name "*.ipk") ./artifact/package/
       #     cp -rf $(find ./openwrt/bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
 
+      # - name: Deliver firmware
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: OpenWrt_firmware
+      #     path: ./artifact/firmware/
+
       # - name: Deliver buildinfo
       #   uses: actions/upload-artifact@v3
       #   with:
@@ -92,12 +98,6 @@ jobs:
       #     name: OpenWrt_package
       #     path: ./artifact/package/
 
-      # - name: Deliver firmware
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: OpenWrt_firmware
-      #     path: ./artifact/firmware/
-
       - name: Prepare artifact
         run: |
           mkdir -p ./artifact/firmware
@@ -109,10 +109,34 @@ jobs:
           name: OpenWrt_firmware
           path: ./artifact/firmware/
 
-      - name: Upload release asset
-        uses: svenstaro/upload-release-action@v2
+      - name: Archive firmware
+        uses: thedoctor0/zip-release@main
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ github.ref }}
-          file: ./artifact/firmware/*
-          file_glob: true
+          filename: "OpenWrt_firmware.zip"
+          directory: ./artifact/firmware/
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            Changes in this Release
+            - First Change
+            - Second Change
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./OpenWrt_firmware.zip
+          asset_name: OpenWrt_firmware.zip
+          asset_content_type: application/zip
