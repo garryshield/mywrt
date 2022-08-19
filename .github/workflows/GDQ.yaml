@@ -100,6 +100,18 @@ jobs:
       #     name: OpenWrt_firmware
       #     path: ../artifact/firmware/
 
+      - name: Prepare artifact
+        run: |
+          cd openwrt
+          mkdir -p ../artifact/firmware
+          cp -rf ./config/* ../artifact/firmware/
+
+      - name: Deliver firmware
+        uses: actions/upload-artifact@v3
+        with:
+          name: OpenWrt_firmware
+          path: ../artifact/firmware/
+
       - name: Upload release asset
         if: github.event == 'release'
         uses: svenstaro/upload-release-action@v2
