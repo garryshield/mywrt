@@ -80,55 +80,14 @@ jobs:
       #     cp -rf $(find ./openwrt/bin/packages/ -type f -name "*.ipk") ./artifact/package/
       #     cp -rf $(find ./openwrt/bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
 
-      # - name: Deliver firmware
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: OpenWrt_firmware
-      #     path: ./artifact/firmware/
-
-      # - name: Deliver buildinfo
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: OpenWrt_buildinfo
-      #     path: ./artifact/buildinfo/
-
-      # - name: Deliver package
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: OpenWrt_package
-      #     path: ./artifact/package/
-
-      - name: Prepare artifact
+      - name: Prepare
         run: |
           mkdir -p ./artifact/firmware
-          cp -rf ./openwrt/config/* ./artifact/firmware/
-
-      - name: log1
-        run: |
-          pwd
-          ls -al
-
-      - name: Deliver firmware
-        uses: actions/upload-artifact@v3
-        with:
-          name: OpenWrt_firmware
-          path: ./artifact/firmware/
-
-      - name: log2
-        run: |
-          pwd
-          ls -al
-
-      - name: Archive firmware
-        uses: thedoctor0/zip-release@main
-        with:
-          path: ./artifact/firmware/
-          filename: OpenWrt_firmware.zip
-
-      - name: log3
-        run: |
-          pwd
-          ls -al
+          mkdir -p ./artifact/package
+          mkdir -p ./artifact/buildinfo
+          echo '' > ./artifact/firmware/main
+          echo '' > ./artifact/package/main
+          echo '' > ./artifact/buildinfo/main
 
       - name: Create Release
         id: create_release
@@ -136,22 +95,27 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: v${{ github.run_number }}
+          release_name: Release v${{ github.run_number }}
           body: |
-            Changes in this Release
-            - First Change
-            - Second Change
+            v${{ github.run_number }}
           draft: false
           prerelease: false
 
-      - name: log4
-        run: |
-          pwd
-          ls -al
+      # firmware
+      - name: Upload firmware
+        uses: actions/upload-artifact@v3
+        with:
+          name: OpenWrt_firmware
+          path: ./artifact/firmware/
 
-      - name: Upload Release Asset
-        id: upload-release-asset
+      - name: Archive firmware
+        uses: thedoctor0/zip-release@main
+        with:
+          path: ./artifact/firmware/
+          filename: OpenWrt_firmware.zip
+
+      - name: Release firmware
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -159,4 +123,50 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./OpenWrt_firmware.zip
           asset_name: OpenWrt_firmware.zip
+          asset_content_type: application/zip
+
+      # package
+      - name: Upload package
+        uses: actions/upload-artifact@v3
+        with:
+          name: OpenWrt_package
+          path: ./artifact/package/
+
+      - name: Archive package
+        uses: thedoctor0/zip-release@main
+        with:
+          path: ./artifact/package/
+          filename: OpenWrt_package.zip
+
+      - name: Release package
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./OpenWrt_package.zip
+          asset_name: OpenWrt_package.zip
+          asset_content_type: application/zip
+
+      # buildinfo
+      - name: Upload buildinfo
+        uses: actions/upload-artifact@v3
+        with:
+          name: OpenWrt_buildinfo
+          path: ./artifact/buildinfo/
+
+      - name: Archive buildinfo
+        uses: thedoctor0/zip-release@main
+        with:
+          path: ./artifact/buildinfo/
+          filename: OpenWrt_buildinfo.zip
+
+      - name: Release buildinfo
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./OpenWrt_buildinfo.zip
+          asset_name: OpenWrt_buildinfo.zip
           asset_content_type: application/zip
