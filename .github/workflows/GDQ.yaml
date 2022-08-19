@@ -24,7 +24,6 @@ jobs:
           REPO_BRANCH: master
         run: |
           git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
-          cd openwrt
 
       # - name: Space cleanup
       #   env:
@@ -102,11 +101,9 @@ jobs:
 
       - name: Prepare artifact
         run: |
-          cd openwrt
-          ls -sl ./
-          pwd
-          mkdir -p ../artifact/firmware
-          cp -rf ./config/* ../artifact/firmware/
+          mkdir -p ./artifact/firmware
+          cd 
+          cp -rf ./openwrt/config/* ./artifact/firmware/
 
       - name: Deliver firmware
         uses: actions/upload-artifact@v3
@@ -115,7 +112,6 @@ jobs:
           path: ./artifact/firmware/
 
       - name: Upload release asset
-        if: github.event == 'release'
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.YOURTOKEN }}
