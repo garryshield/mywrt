@@ -106,14 +106,14 @@ jobs:
       - name: Archive firmware
         uses: thedoctor0/zip-release@main
         with:
-          path: ./artifact/firmware/
+          directory: ./artifact/firmware/
           filename: OpenWrt_firmware.zip
 
       - name: Upload firmware
         uses: actions/upload-artifact@v3
         with:
           name: OpenWrt_firmware
-          path: OpenWrt_firmware.zip
+          path: ./artifact/firmware/
 
       - name: Release firmware
         uses: actions/upload-release-asset@v1
@@ -121,7 +121,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./OpenWrt_firmware.zip
+          asset_path: ./artifact/firmware/OpenWrt_firmware.zip
           asset_name: OpenWrt_firmware.zip
           asset_content_type: application/zip
 
@@ -129,14 +129,14 @@ jobs:
       - name: Archive package
         uses: thedoctor0/zip-release@main
         with:
-          path: ./artifact/package/
+          directory: ./artifact/package/
           filename: OpenWrt_package.zip
 
       - name: Upload package
         uses: actions/upload-artifact@v3
         with:
           name: OpenWrt_package
-          path: OpenWrt_package.zip
+          path: ./artifact/package/
 
       - name: Release package
         uses: actions/upload-release-asset@v1
@@ -144,7 +144,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./OpenWrt_package.zip
+          asset_path: ./artifact/package/OpenWrt_package.zip
           asset_name: OpenWrt_package.zip
           asset_content_type: application/zip
 
@@ -152,14 +152,14 @@ jobs:
       - name: Archive buildinfo
         uses: thedoctor0/zip-release@main
         with:
-          path: ./artifact/buildinfo/
+          directory: ./artifact/buildinfo/
           filename: OpenWrt_buildinfo.zip
 
       - name: Upload buildinfo
         uses: actions/upload-artifact@v3
         with:
           name: OpenWrt_buildinfo
-          path: OpenWrt_buildinfo.zip
+          path: ./artifact/buildinfo/
 
       - name: Release buildinfo
         uses: actions/upload-release-asset@v1
@@ -167,6 +167,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./OpenWrt_buildinfo.zip
+          asset_path: ./artifact/buildinfo/OpenWrt_buildinfo.zip
           asset_name: OpenWrt_buildinfo.zip
           asset_content_type: application/zip
