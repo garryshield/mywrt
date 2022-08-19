@@ -103,17 +103,32 @@ jobs:
           mkdir -p ./artifact/firmware
           cp -rf ./openwrt/config/* ./artifact/firmware/
 
+      - name: log1
+        run: |
+          pwd
+          ls -al
+
       - name: Deliver firmware
         uses: actions/upload-artifact@v3
         with:
           name: OpenWrt_firmware
           path: ./artifact/firmware/
 
+      - name: log2
+        run: |
+          pwd
+          ls -al
+
       - name: Archive firmware
         uses: thedoctor0/zip-release@main
         with:
-          filename: "OpenWrt_firmware.zip"
+          filename: OpenWrt_firmware.zip
           directory: ./artifact/firmware/
+
+      - name: log3
+        run: |
+          pwd
+          ls -al
 
       - name: Create Release
         id: create_release
@@ -129,6 +144,11 @@ jobs:
             - Second Change
           draft: false
           prerelease: false
+
+      - name: log4
+        run: |
+          pwd
+          ls -al
 
       - name: Upload Release Asset
         id: upload-release-asset
