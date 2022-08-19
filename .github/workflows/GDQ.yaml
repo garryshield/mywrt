@@ -122,8 +122,8 @@ jobs:
       - name: Archive firmware
         uses: thedoctor0/zip-release@main
         with:
+          path: ./artifact/firmware/
           filename: OpenWrt_firmware.zip
-          directory: ./artifact/firmware/
 
       - name: log3
         run: |
