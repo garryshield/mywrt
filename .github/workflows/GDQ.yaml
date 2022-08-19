@@ -121,9 +121,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifact/firmware/OpenWrt_firmware.zip
-          asset_name: OpenWrt_firmware.zip
-          asset_content_type: application/zip
+          # asset_path: ./artifact/firmware/OpenWrt_firmware.zip
+          # asset_name: OpenWrt_firmware.zip
+          # asset_content_type: application/zip
+          asset_path: ./artifact/firmware/
+          asset_name: OpenWrt_firmware
 
       # package
       - name: Archive package
@@ -144,9 +146,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifact/package/OpenWrt_package.zip
-          asset_name: OpenWrt_package.zip
-          asset_content_type: application/zip
+          # asset_path: ./artifact/package/OpenWrt_package.zip
+          # asset_name: OpenWrt_package.zip
+          # asset_content_type: application/zip
+          asset_path: ./artifact/package/
+          asset_name: OpenWrt_package
 
       # buildinfo
       - name: Archive buildinfo
@@ -167,6 +171,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifact/buildinfo/OpenWrt_buildinfo.zip
-          asset_name: OpenWrt_buildinfo.zip
-          asset_content_type: application/zip
+          # asset_path: ./artifact/buildinfo/OpenWrt_buildinfo.zip
+          # asset_name: OpenWrt_buildinfo.zip
+          # asset_content_type: application/zip
+          asset_path: ./artifact/buildinfo/
+          asset_name: OpenWrt_buildinfo
