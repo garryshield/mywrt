@@ -1,1 +1,1 @@
-# mywrt
+# openwrt-builder
