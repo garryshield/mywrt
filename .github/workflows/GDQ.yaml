@@ -46,6 +46,8 @@ jobs:
 
           cd openwrt
           id
+          id -u
+          id -g
           ls -al
 
       - name: Update feeds
@@ -56,18 +58,20 @@ jobs:
           run: |
             cd ~/lede
             id
+            id -u
+            id -g
             ls -al
-            ./scripts/feeds update -a
+            # ./scripts/feeds update -a
 
-      - name: Install feeds
-        uses: addnab/docker-run-action@v3
-        with:
-          image: garryshield/openwrt-docker:latest
-          options: -u $(id -u):$(id -g) -v ${{ github.workspace }}/openwrt:/home/ubuntu/lede
-          run: |
-            cd ~/lede
-            ./scripts/feeds install -a
-            ./scripts/feeds install -a
+      # - name: Install feeds
+      #   uses: addnab/docker-run-action@v3
+      #   with:
+      #     image: garryshield/openwrt-docker:latest
+      #     options: -u $(id -u):$(id -g) -v ${{ github.workspace }}/openwrt:/home/ubuntu/lede
+      #     run: |
+      #       cd ~/lede
+      #       ./scripts/feeds install -a
+      #       ./scripts/feeds install -a
 
       - name: Apply after hook
         run: |
