@@ -52,7 +52,7 @@ jobs:
         uses: addnab/docker-run-action@v3
         with:
           image: garryshield/openwrt-docker:latest
-          options: -v ${{ github.workspace }}/openwrt:/home/ubuntu/lede
+          options: -u $(id -u):$(id -g) -v ${{ github.workspace }}/openwrt:/home/ubuntu/lede
           run: |
             cd ~/lede
             id
@@ -63,7 +63,7 @@ jobs:
         uses: addnab/docker-run-action@v3
         with:
           image: garryshield/openwrt-docker:latest
-          options: -v ${{ github.workspace }}/openwrt:/home/ubuntu/lede
+          options: -u $(id -u):$(id -g) -v ${{ github.workspace }}/openwrt:/home/ubuntu/lede
           run: |
             cd ~/lede
             ./scripts/feeds install -a
