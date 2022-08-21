@@ -49,12 +49,13 @@ jobs:
           id -u
           id -g
           ls -al
+          echo "-u $(id -u):$(id -g) -v ${{ github.workspace }}/openwrt:/home/ubuntu/lede"
 
       - name: Update feeds
         uses: addnab/docker-run-action@v3
         with:
           image: garryshield/openwrt-docker:latest
-          options: -u $(id -u):$(id -g) -v ${{ github.workspace }}/openwrt:/home/ubuntu/lede
+          options: -v ${{ github.workspace }}/openwrt:/home/ubuntu/lede
           run: |
             cd ~/lede
             id
