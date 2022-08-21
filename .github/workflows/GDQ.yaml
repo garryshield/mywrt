@@ -24,8 +24,8 @@ jobs:
 
       - name: Set Env
         run: |
-          source "${GITHUB_WORKSPACE}/user/common/env"
-          source "${GITHUB_WORKSPACE}/user/${{matrix.target}}/env"
+          source "user/common/env"
+          source "user/${{matrix.target}}/env"
           echo "DATE=${DATE}"                                   >> $GITHUB_ENV
           echo "REPO_URL=${REPO_URL}"                           >> $GITHUB_ENV
           echo "REPO_BRANCH=${REPO_BRANCH}"                     >> $GITHUB_ENV
@@ -33,8 +33,42 @@ jobs:
 
       - name: Clone source code
         run: |
-          git clone --depth 1 -b ${{env.REPO_BRANCH}} ${{env.REPO_URL}}  openwrt
-          tree -L 2 ./
+          git clone --depth 1 -b ${{env.REPO_BRANCH}} ${{env.REPO_URL}} openwrt
+          tree -a -L 2 ./
+
+      - name: Apply patches
+        run: |
+          echo "Apply patches"
+          if [ -n "$(ls -A "user/common/patches" 2>/dev/null)" ]; then
+          (
+            find "user/common/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d 'openwrt' -p0 --forward"
+          )
+          fi
+          if [ -n "$(ls -A "user/${{matrix.target}}/patches" 2>/dev/null)" ]; then
+          (
+            find "user/${{matrix.target}}/patches" -type f -name '*.patch' -print0 | sort -z | xargs -I % -t -0 -n 1 sh -c "cat '%'  | patch -d 'openwrt' -p0 --forward"
+          )
+          fi
+
+          echo "Apply patch.sh"
+          if [ -f "user/common/patch.sh" ]; then
+          (
+            cd openwrt
+            /bin/bash "../user/common/patch.sh" ${{matrix.target}}
+          )
+          fi
+          if [ -f "user/${{matrix.target}}/patch.sh" ]; then
+          (
+            cd openwrt
+            /bin/bash "../user/${{matrix.target}}/patch.sh"
+          )
+          fi
+
+      # - name: Update feeds
+      #   run: cd openwrt && ./scripts/feeds update -a
+
+      # - name: Install feeds
+      #   run: cd openwrt && ./scripts/feeds install -a
 
       # - name: Initialization environment
       #   env:
