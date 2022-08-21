@@ -55,7 +55,7 @@ jobs:
         uses: addnab/docker-run-action@v3
         with:
           image: garryshield/openwrt-docker:latest
-          options: -v ${{ github.workspace }}/openwrt:/home/ubuntu/lede
+          options: -u 1001:121 -v ${{ github.workspace }}/openwrt:/home/ubuntu/lede
           run: |
             cd ~/lede
             id
