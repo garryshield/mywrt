@@ -27,7 +27,10 @@ jobs:
           source "${GITHUB_WORKSPACE}/user/common/env"
           source "${GITHUB_WORKSPACE}/user/${{matrix.target}}/env"
           echo "DATE=${DATE}"                                   >> $GITHUB_ENV
-          echo $GITHUB_ENV
+          cat $GITHUB_ENV
+          echo ${{ toJson(github) }}
+          echo env
+
 
       # - name: Clone source code
       #   env:
