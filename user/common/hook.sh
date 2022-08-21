@@ -8,3 +8,5 @@ target=$2
 echo "Execute common hook.sh ${hook} ${target}"
 
 pwd
+
+cat $GITHUB_ENV
