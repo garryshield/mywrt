@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [t1]
+        target: [t1, t2]
 
     name: Build ${{matrix.target}}
 
@@ -30,7 +30,6 @@ jobs:
           echo "DATE=${DATE}"                                   >> $GITHUB_ENV
           echo "REPO_URL=${REPO_URL}"                           >> $GITHUB_ENV
           echo "REPO_BRANCH=${REPO_BRANCH}"                     >> $GITHUB_ENV
-          echo "CONFIG_FILE=${CONFIG_FILE}"                     >> $GITHUB_ENV
 
           cat $GITHUB_ENV
 
@@ -39,183 +38,178 @@ jobs:
           git clone --depth 1 -b ${{env.REPO_BRANCH}} ${{env.REPO_URL}} openwrt
           tree -a -L 2 ./
 
-      - name: Apply before hook
+      # - name: Apply before hook
+      #   run: |
+      #     /bin/bash "user/common/hook.sh" before ${{matrix.target}}
+      #     /bin/bash "user/${{matrix.target}}/hook.sh" before ${{matrix.target}}
+
+      # - name: Update feeds
+      #   uses: addnab/docker-run-action@v3
+      #   with:
+      #     image: garryshield/openwrt-docker:latest
+      #     options: -u 1001:121 -w /src -v ${{ github.workspace }}:/src
+      #     run: |
+      #       cd openwrt
+      #       ./scripts/feeds update -a
+
+      # - name: Install feeds
+      #   uses: addnab/docker-run-action@v3
+      #   with:
+      #     image: garryshield/openwrt-docker:latest
+      #     options: -u 1001:121 -w /src -v ${{ github.workspace }}:/src
+      #     run: |
+      #       cd openwrt
+      #       ./scripts/feeds install -a
+      #       ./scripts/feeds install -a
+
+      # - name: Apply after hook
+      #   run: |
+      #     /bin/bash "user/common/hook.sh" after ${{matrix.target}}
+      #     /bin/bash "user/${{matrix.target}}/hook.sh" after ${{matrix.target}}
+
+      # - name: Make config
+      #   uses: addnab/docker-run-action@v3
+      #   with:
+      #     image: garryshield/openwrt-docker:latest
+      #     options: -u 1001:121 -w /src -v ${{ github.workspace }}:/src
+      #     run: |
+      #       cd openwrt
+      #       make defconfig
+
+      # - name: Make download
+      #   uses: addnab/docker-run-action@v3
+      #   with:
+      #     image: garryshield/openwrt-docker:latest
+      #     options: -u 1001:121 -w /src -v ${{ github.workspace }}:/src
+      #     run: |
+      #       cd openwrt
+      #       make download -j$(nproc)
+      #       find dl -size -1024c -exec ls -l {} \;
+      #       find dl -size -1024c -exec rm -f {} \;
+
+      # - name: Compile firmware
+      #   uses: addnab/docker-run-action@v3
+      #   with:
+      #     image: garryshield/openwrt-docker:latest
+      #     options: -u 1001:121 -w /src -v ${{ github.workspace }}:/src
+      #     run: |
+      #       cd openwrt
+      #       make -j$(nproc) || make -j1 V=s
+      #       echo "======================="
+      #       echo "Space usage:"
+      #       echo "======================="
+      #       df -h
+      #       echo "======================="
+      #       du -h --max-depth=1 ./ --exclude=build_dir --exclude=bin
+      #       du -h --max-depth=1 ./build_dir
+      #       du -h --max-depth=1 ./bin
+
+      # - name: Prepare artifact
+      #   working-directory: ./openwrt
+      #   run: |
+      #     mkdir -p ../artifact/firmware
+      #     mkdir -p ../artifact/packages
+      #     mkdir -p ../artifact/buildinfo
+      #     rm -rf $(find ./bin/targets/ -type d -name "packages")
+      #     cp -rf $(find ./bin/targets/ -type f) ../artifact/firmware/
+      #     cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ../artifact/packages/
+      #     cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ../artifact/buildinfo/
+
+      - name: Prepare artifact test
+        working-directory: ./openwrt
         run: |
-          /bin/bash "user/common/hook.sh" before ${{matrix.target}}
-          /bin/bash "user/${{matrix.target}}/hook.sh" before ${{matrix.target}}
+          mkdir -p ../artifact/firmware
+          mkdir -p ../artifact/packages
+          mkdir -p ../artifact/buildinfo
 
-      - name: Update feeds
-        uses: addnab/docker-run-action@v3
+          touch ../artifact/firmware/1
+          touch ../artifact/packages/1
+          touch ../artifact/buildinfo/1
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          image: garryshield/openwrt-docker:latest
-          options: -u 1001:121 -w /src -v ${{ github.workspace }}:/src
-          run: |
-            cd openwrt
-            ./scripts/feeds update -a
+          tag_name: ${{env.DATE}}-${{matrix.target}}
+          release_name: ${{env.DATE}}-${{matrix.target}}
+          body: |
+            ${{env.DATE}}-${{matrix.target}}
+          draft: false
+          prerelease: false
 
-      - name: Install feeds
-        uses: addnab/docker-run-action@v3
+      # firmware
+      - name: Upload firmware
+        uses: actions/upload-artifact@v3
         with:
-          image: garryshield/openwrt-docker:latest
-          options: -u 1001:121 -w /src -v ${{ github.workspace }}:/src
-          run: |
-            cd openwrt
-            ./scripts/feeds install -a
-            ./scripts/feeds install -a
+          name: OpenWrt_firmware
+          path: ./artifact/firmware/
 
-      - name: Apply after hook
-        run: |
-          /bin/bash "user/common/hook.sh" after ${{matrix.target}}
-          /bin/bash "user/${{matrix.target}}/hook.sh" after ${{matrix.target}}
-
-      - name: Make config
-        uses: addnab/docker-run-action@v3
+      - name: Archive firmware
+        uses: thedoctor0/zip-release@main
         with:
-          image: garryshield/openwrt-docker:latest
-          options: -u 1001:121 -w /src -v ${{ github.workspace }}:/src
-          run: |
-            cd openwrt
-            make defconfig
+          directory: ./artifact/firmware/
+          filename: OpenWrt_firmware.zip
 
-      - name: Make download
-        uses: addnab/docker-run-action@v3
+      - name: Release firmware
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          image: garryshield/openwrt-docker:latest
-          options: -u 1001:121 -w /src -v ${{ github.workspace }}:/src
-          run: |
-            cd openwrt
-            make download -j$(nproc)
-            find dl -size -1024c -exec ls -l {} \;
-            find dl -size -1024c -exec rm -f {} \;
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./artifact/firmware/OpenWrt_firmware.zip
+          asset_name: OpenWrt_firmware.zip
+          asset_content_type: application/zip
 
-      - name: Compile firmware
-        uses: addnab/docker-run-action@v3
+      # packages
+      - name: Upload packages
+        uses: actions/upload-artifact@v3
         with:
-          image: garryshield/openwrt-docker:latest
-          options: -u 1001:121 -w /src -v ${{ github.workspace }}:/src
-          run: |
-            cd openwrt
-            make -j$(nproc) || make -j1 V=s
-            echo "======================="
-            echo "Space usage:"
-            echo "======================="
-            df -h
-            echo "======================="
-            du -h --max-depth=1 ./ --exclude=build_dir --exclude=bin
-            du -h --max-depth=1 ./build_dir
-            du -h --max-depth=1 ./bin
+          name: OpenWrt_packages
+          path: ./artifact/packages/
+
+      - name: Archive packages
+        uses: thedoctor0/zip-release@main
+        with:
+          directory: ./artifact/packages/
+          filename: OpenWrt_packages.zip
+
+      - name: Release packages
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./artifact/packages/OpenWrt_packages.zip
+          asset_name: OpenWrt_packages.zip
+          asset_content_type: application/zip
+
+      # buildinfo
+      - name: Upload buildinfo
+        uses: actions/upload-artifact@v3
+        with:
+          name: OpenWrt_buildinfo
+          path: ./artifact/buildinfo/
+
+      - name: Archive buildinfo
+        uses: thedoctor0/zip-release@main
+        with:
+          directory: ./artifact/buildinfo/
+          filename: OpenWrt_buildinfo.zip
+
+      - name: Release buildinfo
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./artifact/buildinfo/OpenWrt_buildinfo.zip
+          asset_name: OpenWrt_buildinfo.zip
+          asset_content_type: application/zip
 
       - name: Delete workflow runs
         uses: Mattraks/delete-workflow-runs@v2
         with:
           retain_days: 1
           keep_minimum_runs: 1
-
-      # - name: Prepare artifact
-      #   working-directory: ./openwrt
-      #   run: |
-      #     mkdir -p ../artifact/firmware
-      #     mkdir -p ../artifact/package
-      #     mkdir -p ../artifact/buildinfo
-      #     rm -rf $(find ./bin/targets/ -type d -name "packages")
-      #     cp -rf $(find ./bin/targets/ -type f) ../artifact/firmware/
-      #     cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ../artifact/package/
-      #     cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ../artifact/buildinfo/
-
-      # # - name: Prepare test
-      # #   run: |
-      # #     mkdir -p ./artifact/firmware
-      # #     mkdir -p ./artifact/package
-      # #     mkdir -p ./artifact/buildinfo
-      # #     echo '' > ./artifact/firmware/main
-      # #     echo '' > ./artifact/package/main
-      # #     echo '' > ./artifact/buildinfo/main
-
-      # - name: Create Release
-      #   id: create_release
-      #   uses: actions/create-release@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     tag_name: v${{ github.run_number }}
-      #     release_name: Release v${{ github.run_number }}
-      #     body: |
-      #       v${{ github.run_number }}
-      #     draft: false
-      #     prerelease: false
-
-      # # config
-      # - name: Upload firmware
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: OpenWrt_config
-      #     path: ./openwrt/.config
-
-      # # firmware
-      # - name: Upload firmware
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: OpenWrt_firmware
-      #     path: ./artifact/firmware/
-
-      # - name: Archive firmware
-      #   uses: thedoctor0/zip-release@main
-      #   with:
-      #     directory: ./artifact/firmware/
-      #     filename: OpenWrt_firmware.zip
-
-      # - name: Release firmware
-      #   uses: actions/upload-release-asset@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-      #     asset_path: ./artifact/firmware/OpenWrt_firmware.zip
-      #     asset_name: OpenWrt_firmware.zip
-      #     asset_content_type: application/zip
-
-      # # package
-      # - name: Upload package
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: OpenWrt_package
-      #     path: ./artifact/package/
-
-      # - name: Archive package
-      #   uses: thedoctor0/zip-release@main
-      #   with:
-      #     directory: ./artifact/package/
-      #     filename: OpenWrt_package.zip
-
-      # - name: Release package
-      #   uses: actions/upload-release-asset@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-      #     asset_path: ./artifact/package/OpenWrt_package.zip
-      #     asset_name: OpenWrt_package.zip
-      #     asset_content_type: application/zip
-
-      # # buildinfo
-      # - name: Upload buildinfo
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: OpenWrt_buildinfo
-      #     path: ./artifact/buildinfo/
-
-      # - name: Archive buildinfo
-      #   uses: thedoctor0/zip-release@main
-      #   with:
-      #     directory: ./artifact/buildinfo/
-      #     filename: OpenWrt_buildinfo.zip
-
-      # - name: Release buildinfo
-      #   uses: actions/upload-release-asset@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-      #     asset_path: ./artifact/buildinfo/OpenWrt_buildinfo.zip
-      #     asset_name: OpenWrt_buildinfo.zip
-      #     asset_content_type: application/zip
