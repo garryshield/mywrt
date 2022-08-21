@@ -47,14 +47,14 @@ jobs:
       - name: Update feeds
         uses: addnab/docker-run-action@v3
         with: garryshield/openwrt-docker:latest
-        options: -v ${{ GITHUB_WORKSPACE }}/openwrt:/home/ubuntu/lede
-        run: |
-          cd ~/lede
-          # ./scripts/feeds update -a
-          id
-          pwd
-          git --version
-          ls -al
+          options: -v ${{ GITHUB_WORKSPACE }}/openwrt:/home/ubuntu/lede
+          run: |
+            cd ~/lede
+            # ./scripts/feeds update -a
+            id
+            pwd
+            git --version
+            ls -al
 
 
       # - name: Update feeds
