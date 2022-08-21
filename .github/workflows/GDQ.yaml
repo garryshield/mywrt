@@ -143,7 +143,7 @@ jobs:
       - name: Upload firmware
         uses: actions/upload-artifact@v3
         with:
-          name: OpenWrt_firmware
+          name: OpenWrt_firmware_${{matrix.target}}
           path: ./artifact/firmware/
 
       - name: Archive firmware
@@ -166,7 +166,7 @@ jobs:
       - name: Upload packages
         uses: actions/upload-artifact@v3
         with:
-          name: OpenWrt_packages
+          name: OpenWrt_packages_${{matrix.target}}
           path: ./artifact/packages/
 
       - name: Archive packages
@@ -189,7 +189,7 @@ jobs:
       - name: Upload buildinfo
         uses: actions/upload-artifact@v3
         with:
-          name: OpenWrt_buildinfo
+          name: OpenWrt_buildinfo_${{matrix.target}}
           path: ./artifact/buildinfo/
 
       - name: Archive buildinfo
