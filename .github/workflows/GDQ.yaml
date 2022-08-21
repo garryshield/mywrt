@@ -44,6 +44,10 @@ jobs:
           /bin/bash "user/common/hook.sh" before ${{matrix.target}}
           /bin/bash "user/${{matrix.target}}/hook.sh" before ${{matrix.target}}
 
+          cd openwrt
+          id
+          ls -al
+
       - name: Update feeds
         uses: addnab/docker-run-action@v3
         with:
@@ -51,6 +55,8 @@ jobs:
           options: -v ${{ github.workspace }}/openwrt:/home/ubuntu/lede
           run: |
             cd ~/lede
+            id
+            ls -al
             ./scripts/feeds update -a
 
       - name: Install feeds
