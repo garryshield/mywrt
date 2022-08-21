@@ -7,16 +7,6 @@ on:
       - "CHANGELOG.md"
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    container: garryshield/openwrt-docker
-    if: github.event.repository.owner.id == github.event.sender.id
-
-    steps:
-      - name: Test in docker
-        run: |
-          id
-
   build:
     runs-on: ubuntu-latest
     if: github.event.repository.owner.id == github.event.sender.id
@@ -53,6 +43,19 @@ jobs:
         run: |
           /bin/bash "user/common/hook.sh" before ${{matrix.target}}
           /bin/bash "user/${{matrix.target}}/hook.sh" before ${{matrix.target}}
+
+      - name: Update feeds
+        uses: addnab/docker-run-action@v3
+        with: garryshield/openwrt-docker:latest
+        options: -v ${{ GITHUB_WORKSPACE }}/openwrt:/home/ubuntu/lede
+        run:|
+          cd ~/lede
+          # ./scripts/feeds update -a
+          id
+          pwd
+          git --version
+          ls -al
+
 
       # - name: Update feeds
       #   run: |
