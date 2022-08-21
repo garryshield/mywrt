@@ -1,1 +1,2 @@
 DATE=$(date +%Y-%m-%d)
+CONFIG_FILE=".config"
