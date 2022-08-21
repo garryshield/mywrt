@@ -23,11 +23,9 @@ do_common
 
 case "${hook}" in
 before)
-    echo "before"
     do_before
     ;;
 after)
-    echo "after"
     do_after
     ;;
 *)
