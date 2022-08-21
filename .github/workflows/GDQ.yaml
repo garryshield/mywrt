@@ -49,20 +49,20 @@ jobs:
           id -u
           id -g
           ls -al
-          echo "-u $(id -u):$(id -g) -v ${{ github.workspace }}/openwrt:/home/ubuntu/lede"
+          echo "-u $(id -u):$(id -g) -w /src -v ${{ github.workspace }}:/src"
 
       - name: Update feeds
         uses: addnab/docker-run-action@v3
         with:
           image: garryshield/openwrt-docker:latest
-          options: -u 1001:121 -v ${{ github.workspace }}/openwrt:/home/ubuntu/lede
+          options: -u 1001:121 -w /src -v ${{ github.workspace }}:/src
           run: |
-            cd ~/lede
+            cd openwrt
             id
             id -u
             id -g
             ls -al
-            # ./scripts/feeds update -a
+            ./scripts/feeds update -a
 
       # - name: Install feeds
       #   uses: addnab/docker-run-action@v3
