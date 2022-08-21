@@ -132,10 +132,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{env.DATE}}-${{matrix.target}}
-          release_name: ${{env.DATE}}-${{matrix.target}}
+          tag_name: ${{env.DATE}}-${{matrix.target}}-${{github.run_number}}
+          release_name: ${{env.DATE}}-${{matrix.target}}-${{github.run_number}}
           body: |
-            ${{env.DATE}}-${{matrix.target}}
+            ${{env.DATE}}-${{matrix.target}}-${{github.run_number}}
           draft: false
           prerelease: false
 
@@ -143,14 +143,14 @@ jobs:
       - name: Upload firmware
         uses: actions/upload-artifact@v3
         with:
-          name: OpenWrt_firmware_${{matrix.target}}
+          name: OpenWrt-firmware-${{matrix.target}}-${{github.run_number}}
           path: ./artifact/firmware/
 
       - name: Archive firmware
         uses: thedoctor0/zip-release@main
         with:
           directory: ./artifact/firmware/
-          filename: OpenWrt_firmware.zip
+          filename: OpenWrt-firmware.zip
 
       - name: Release firmware
         uses: actions/upload-release-asset@v1
@@ -158,22 +158,22 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifact/firmware/OpenWrt_firmware.zip
-          asset_name: OpenWrt_firmware.zip
+          asset_path: ./artifact/firmware/OpenWrt-firmware.zip
+          asset_name: OpenWrt-firmware.zip
           asset_content_type: application/zip
 
       # packages
       - name: Upload packages
         uses: actions/upload-artifact@v3
         with:
-          name: OpenWrt_packages_${{matrix.target}}
+          name: OpenWrt-packages-${{matrix.target}}-${{github.run_number}}
           path: ./artifact/packages/
 
       - name: Archive packages
         uses: thedoctor0/zip-release@main
         with:
           directory: ./artifact/packages/
-          filename: OpenWrt_packages.zip
+          filename: OpenWrt-packages.zip
 
       - name: Release packages
         uses: actions/upload-release-asset@v1
@@ -181,22 +181,22 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifact/packages/OpenWrt_packages.zip
-          asset_name: OpenWrt_packages.zip
+          asset_path: ./artifact/packages/OpenWrt-packages.zip
+          asset_name: OpenWrt-packages.zip
           asset_content_type: application/zip
 
       # buildinfo
       - name: Upload buildinfo
         uses: actions/upload-artifact@v3
         with:
-          name: OpenWrt_buildinfo_${{matrix.target}}
+          name: OpenWrt-buildinfo-${{matrix.target}}-${{github.run_number}}
           path: ./artifact/buildinfo/
 
       - name: Archive buildinfo
         uses: thedoctor0/zip-release@main
         with:
           directory: ./artifact/buildinfo/
-          filename: OpenWrt_buildinfo.zip
+          filename: OpenWrt-buildinfo.zip
 
       - name: Release buildinfo
         uses: actions/upload-release-asset@v1
@@ -204,8 +204,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifact/buildinfo/OpenWrt_buildinfo.zip
-          asset_name: OpenWrt_buildinfo.zip
+          asset_path: ./artifact/buildinfo/OpenWrt-buildinfo.zip
+          asset_name: OpenWrt-buildinfo.zip
           asset_content_type: application/zip
 
       - name: Delete workflow runs
