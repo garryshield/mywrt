@@ -68,6 +68,12 @@ jobs:
           /bin/bash "user/common/hook.sh" after ${{matrix.target}}
           /bin/bash "user/${{matrix.target}}/hook.sh" after ${{matrix.target}}
 
+      - name: Delete workflow runs
+        uses: Mattraks/delete-workflow-runs@v2
+        with:
+          retain_days: 1
+          keep_minimum_runs: 1
+
       # - name: Make config
       #   run: |
       #     cd openwrt
