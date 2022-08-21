@@ -9,4 +9,28 @@ echo "Execute target hook.sh ${hook} ${target}"
 
 pwd
 
-cat $GITHUB_ENV
+do_common() {
+    echo 'do_common'
+}
+do_before() {
+    echo 'do_before'
+}
+do_after() {
+    echo 'do_after'
+}
+
+do_common
+
+case "${hook}" in
+before)
+    echo "before"
+    do_before
+    ;;
+after)
+    echo "after"
+    do_after
+    ;;
+*)
+    echo "Unknow ${hook}!"
+    ;;
+esac
