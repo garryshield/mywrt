@@ -64,6 +64,9 @@ jobs:
           )
           fi
 
+      - name: Apply patches test
+        run: |
+          pwd
       # - name: Update feeds
       #   run: cd openwrt && ./scripts/feeds update -a
 
