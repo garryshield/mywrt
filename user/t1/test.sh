@@ -4,3 +4,4 @@ cat $GITHUB_ENV
 
 
 echo 'sdsd'
+
