@@ -1,7 +1,8 @@
 echo $GITHUB_ENV
 
+echo '---'
+
 cat $GITHUB_ENV
 
-
-echo 'sdsd'
+echo '222'
 
