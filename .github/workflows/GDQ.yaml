@@ -38,6 +38,7 @@ jobs:
 
           cat $GITHUB_ENV
           source "user/${{matrix.target}}/test.sh"
+          test1
 
       # - name: Initialization environment
       #   env:

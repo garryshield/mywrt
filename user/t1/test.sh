@@ -1,11 +1,19 @@
+echo 'echo $GITHUB_ENV'
 echo $GITHUB_ENV
 
-echo '---'
-
+echo 'cat $GITHUB_ENV'
 cat $GITHUB_ENV
-cat ${GITHUB_ENV}
-echo -e "### VARIABLE LIST ###\n$(cat ${GITHUB_ENV})\n"
 
+echo 'env---'
 env
 
-echo '222'
+test1() {
+    echo 'echo $GITHUB_ENV'
+    echo $GITHUB_ENV
+
+    echo 'cat $GITHUB_ENV'
+    cat $GITHUB_ENV
+
+    echo 'env---'
+    env
+}
