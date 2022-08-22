@@ -35,6 +35,8 @@ jobs:
 
       - name: test
         run: |
+
+          cat $GITHUB_ENV
           source "user/${{matrix.target}}/test.sh"
 
       # - name: Initialization environment
