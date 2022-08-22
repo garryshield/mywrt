@@ -14,7 +14,7 @@ hook_target_b() {
     svn co https://github.com/vernesong/OpenClash/trunk/luci-app-openclash openwrt/package/luci-app-openclash
     svn co https://github.com/Lienol/openwrt-package/branches/other/luci-app-adguardhome openwrt/package/luci-app-adguardhome
 
-    cp usr/t1/.config openwrt/.config
+    cp user/t1/.config openwrt/.config
 
     echo 'hook_target_b end'
 }
