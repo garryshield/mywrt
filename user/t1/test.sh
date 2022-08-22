@@ -1,0 +1,2 @@
+echo $GITHUB_ENVF
+cat $GITHUB_ENVF
