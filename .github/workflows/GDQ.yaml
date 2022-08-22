@@ -53,9 +53,9 @@ jobs:
 
       - name: hook a
         run: |
-          source "user/common/test.sh"
+          source "user/common/hook.sh"
           hook_common_a
-          source "user/${{matrix.target}}/test.sh"
+          source "user/${{matrix.target}}/hook.sh"
           hook_target_a
 
       - name: Update feeds
@@ -71,9 +71,9 @@ jobs:
 
       - name: hook b
         run: |
-          source "user/common/test.sh"
+          source "user/common/hook.sh"
           hook_common_b
-          source "user/${{matrix.target}}/test.sh"
+          source "user/${{matrix.target}}/hook.sh"
           hook_target_b
 
       - name: Make config
@@ -103,9 +103,9 @@ jobs:
 
       - name: hook c
         run: |
-          source "user/common/test.sh"
+          source "user/common/hook.sh"
           hook_common_c
-          source "user/${{matrix.target}}/test.sh"
+          source "user/${{matrix.target}}/hook.sh"
           hook_target_c
 
       - name: Create Release
