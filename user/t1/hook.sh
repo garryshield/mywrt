@@ -2,33 +2,23 @@
 
 # Execute target hook
 
-hook=$1
-target=$2
-
-echo "Execute target hook.sh ${hook} ${target}"
-
-pwd
-
-do_common() {
-    echo 'do_common'
-}
-do_before() {
-    echo 'do_before'
-}
-do_after() {
-    echo 'do_after'
+hook_target_a() {
+    echo 'hook_target_a'
 }
 
-do_common
+hook_target_b() {
+    echo 'hook_target_b start'
 
-case "${hook}" in
-before)
-    do_before
-    ;;
-after)
-    do_after
-    ;;
-*)
-    echo "Unknow ${hook}!"
-    ;;
-esac
+    pwd
+
+    svn co https://github.com/vernesong/OpenClash/trunk/luci-app-openclash openwrt/package/luci-app-openclash
+    svn co https://github.com/Lienol/openwrt-package/branches/other/luci-app-adguardhome openwrt/package/luci-app-adguardhome
+
+    cp usr/t1/.config openwrt/.config
+
+    echo 'hook_target_b end'
+}
+
+hook_target_c() {
+    echo 'hook_target_c'
+}

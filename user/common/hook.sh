@@ -2,33 +2,14 @@
 
 # Execute common hook
 
-hook=$1
-target=$2
-
-echo "Execute common hook.sh ${hook} ${target}"
-
-pwd
-
-do_common() {
-    echo 'do_common'
-}
-do_before() {
-    echo 'do_before'
-}
-do_after() {
-    echo 'do_after'
+hook_common_a() {
+    echo 'hook_common_a'
 }
 
-do_common
+hook_common_b() {
+    echo 'hook_common_b'
+}
 
-case "${hook}" in
-before)
-    do_before
-    ;;
-after)
-    do_after
-    ;;
-*)
-    echo "Unknow ${hook}!"
-    ;;
-esac
+hook_common_c() {
+    echo 'hook_common_c'
+}
