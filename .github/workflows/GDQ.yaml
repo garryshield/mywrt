@@ -37,6 +37,7 @@ jobs:
         run: |
           echo '-----'
 
+          echo "ASASAS=ASASAS"                     >> $GITHUB_ENV
           cat $GITHUB_ENV
           source "user/${{matrix.target}}/test.sh"
           test1
