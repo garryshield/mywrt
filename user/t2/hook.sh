@@ -12,18 +12,18 @@ hook_target_b() {
     pwd
 
     #### luci-app-advanced
-    git clone https://github.com/sirpdboy/luci-app-advanced openwrt/package/t1/luci-app-advanced
+    git clone https://github.com/sirpdboy/luci-app-advanced openwrt/package/t2/luci-app-advanced
 
     #### luci-app-openclash
-    svn co https://github.com/vernesong/OpenClash/trunk/luci-app-openclash openwrt/package/t1/luci-app-openclash
+    svn co https://github.com/vernesong/OpenClash/trunk/luci-app-openclash openwrt/package/t2/luci-app-openclash
 
     #### luci-app-adguardhome
-    git clone https://github.com/rufengsuixing/luci-app-adguardhome openwrt/package/t1/luci-app-adguardhome
+    git clone https://github.com/rufengsuixing/luci-app-adguardhome openwrt/package/t2/luci-app-adguardhome
 
     #### luci-app-oaf
-    git clone https://github.com/destan19/OpenAppFilter.git openwrt/package/t1/OpenAppFilter
+    git clone https://github.com/destan19/OpenAppFilter.git openwrt/package/t2/OpenAppFilter
 
-    cp user/t1/.config openwrt/.config
+    cp user/t2/.config openwrt/.config
 
     echo 'hook_target_b end'
 }
