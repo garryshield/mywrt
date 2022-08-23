@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [t1]
+        target: [t1, t2]
 
     name: Build ${{matrix.target}}
 
@@ -124,14 +124,14 @@ jobs:
       - name: Upload firmware
         uses: actions/upload-artifact@v3
         with:
-          name: OpenWrt-bin-${{matrix.target}}-${{github.run_number}}
           path: ./openwrt/bin
+          name: openwrt-firmware-${{matrix.target}}-${{github.run_number}}
 
       - name: Archive firmware
         uses: thedoctor0/zip-release@main
         with:
           directory: ./openwrt/bin
-          filename: OpenWrt-firmware.zip
+          filename: openwrt-firmware-${{matrix.target}}-${{github.run_number}}.zip
 
       - name: Release firmware
         uses: actions/upload-release-asset@v1
@@ -139,8 +139,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./openwrt/bin/OpenWrt-firmware.zip
-          asset_name: OpenWrt-firmware.zip
+          asset_path: ./openwrt/bin/openwrt-firmware-${{matrix.target}}-${{github.run_number}}.zip
+          asset_name: openwrt-firmware-${{matrix.target}}-${{github.run_number}}.zip
           asset_content_type: application/zip
 
       - name: Delete workflow runs

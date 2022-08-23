@@ -2,33 +2,32 @@
 
 # Execute target hook
 
-hook=$1
-target=$2
-
-echo "Execute target hook.sh ${hook} ${target}"
-
-pwd
-
-do_common() {
-    echo 'do_common'
-}
-do_before() {
-    echo 'do_before'
-}
-do_after() {
-    echo 'do_after'
+hook_target_a() {
+    echo 'hook_target_a'
 }
 
-do_common
+hook_target_b() {
+    echo 'hook_target_b start'
 
-case "${hook}" in
-before)
-    do_before
-    ;;
-after)
-    do_after
-    ;;
-*)
-    echo "Unknow ${hook}!"
-    ;;
-esac
+    pwd
+
+    #### luci-app-advanced
+    git clone https://github.com/sirpdboy/luci-app-advanced openwrt/package/t1/luci-app-advanced
+
+    #### luci-app-openclash
+    svn co https://github.com/vernesong/OpenClash/trunk/luci-app-openclash openwrt/package/t1/luci-app-openclash
+
+    #### luci-app-adguardhome
+    git clone https://github.com/rufengsuixing/luci-app-adguardhome openwrt/package/t1/luci-app-adguardhome
+
+    #### luci-app-oaf
+    git clone https://github.com/destan19/OpenAppFilter.git openwrt/package/t1/OpenAppFilter
+
+    cp user/t1/.config openwrt/.config
+
+    echo 'hook_target_b end'
+}
+
+hook_target_c() {
+    echo 'hook_target_c'
+}
