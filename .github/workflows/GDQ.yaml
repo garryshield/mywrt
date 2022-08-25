@@ -50,6 +50,7 @@ jobs:
         run: |
           git clone --depth 1 -b ${{env.REPO_BRANCH}} ${{env.REPO_URL}} openwrt
           tree -a -L 2 ./
+          df -hT
 
       - name: hook a
         run: |
@@ -90,6 +91,7 @@ jobs:
 
       - name: Compile firmware
         run: |
+          df -hT
           cd openwrt
           make -j$(nproc) || make -j1 V=s
           echo "======================="
