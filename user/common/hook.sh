@@ -35,9 +35,17 @@ uci commit network
 # /etc/openwrt_release
 # /etc/banner
 ####
-TMP="\$(cat /etc/openwrt_release | grep DISTRIB_REVISION= | awk -F "'" '{print $2}')"
-sed -i "s/\${TMP}/\${TMP} (\$(date +"%Y-%m-%d")) By GarryShield/g" /etc/openwrt_release
+# DISTRIB_REVISION='R22.8.2'
+# DISTRIB_REVISION='R22.8.2 (20220826) Compiled By GarryShield'
+cp /etc/openwrt_release /etc/openwrt_release.bak
+TMP_OLD="\$(cat /etc/openwrt_release | grep DISTRIB_REVISION= | awk -F "'" '{print \$2}')"
+TMP_NEW="\${TMP_OLD} (\$(date +"%Y%m%d")) Compiled By GarryShield"
+sed -i "s:\${TMP_OLD}:\${TMP_NEW}:g" /etc/openwrt_release
 
+cp /etc/banner /etc/banner.bak
+TMP_D="\$(cat /etc/os-release | grep ^NAME= | awk -F "\"" '{print \$2}')"
+TMP_V="\$(cat /etc/os-release | grep ^VERSION= | awk -F "\"" '{print \$2}')"
+TMP_C="\$(cat /etc/openwrt_version)"
 cat <<EOF1 >/etc/banner
      _________
     /        /\      _    ___ ___  ___
@@ -46,11 +54,11 @@ cat <<EOF1 >/etc/banner
  /________/  LE  \  |____|___|___/|___|
  \        \   DE /
   \    LE  \    /  -------------------------------------------
-   \  DE    \  /    %D %V, %C
+   \  DE    \  /    \${TMP_D} \${TMP_V}, \${TMP_C}
     \________\/    -------------------------------------------
 
 --------------------------------------------------------------
-${TMP} ($(date +"%Y-%m-%d")) By GarryShield
+\${TMP_D} \${TMP_NEW}
 --------------------------------------------------------------
 EOF1
 
