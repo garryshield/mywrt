@@ -10,7 +10,7 @@ hook_common_a() {
     echo $MATRIX_ID
 
     cat <<EOF >sdsd.text
-    $MATRIX_ID
+TMP_NEW="\${TMP_OLD} (${MATRIX_ID}) Compiled By GarryShield"
 EOF
 
     ls -al ./
@@ -52,7 +52,7 @@ uci commit network
 # DISTRIB_REVISION='R22.8.2 (20220826) Compiled By GarryShield'
 cp /etc/openwrt_release /etc/openwrt_release.bak
 TMP_OLD="\$(cat /etc/openwrt_release | grep DISTRIB_REVISION= | awk -F "'" '{print \$2}')"
-TMP_NEW="\${TMP_OLD} (\$(date +"%Y%m%d")) Compiled By GarryShield"
+TMP_NEW="\${TMP_OLD} (${MATRIX_ID}) Compiled By GarryShield"
 sed -i "s:\${TMP_OLD}:\${TMP_NEW}:g" /etc/openwrt_release
 
 cp /etc/banner /etc/banner.bak
