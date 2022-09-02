@@ -7,8 +7,7 @@ hook_common_a() {
 
     env
 
-    echo $REPO_URL
-    echo $DATE
+    echo $MATRIX_ID
 }
 
 hook_common_b() {
