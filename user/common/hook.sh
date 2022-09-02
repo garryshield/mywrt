@@ -16,6 +16,7 @@ hook_common_b() {
 ####################################
 # /etc/config/network
 ####
+cp /etc/config/network /etc/config/network.bak
 
 # lan
 uci set network.lan.proto='static'
@@ -60,6 +61,20 @@ cat <<EOF1 >/etc/banner
 --------------------------------------------------------------
 \${TMP_D} \${TMP_NEW}
 --------------------------------------------------------------
+EOF1
+
+####################################
+# /etc/sysupgrade.conf
+####
+cp /etc/sysupgrade.conf /etc/sysupgrade.conf.bak
+cat <<EOF1 >/etc/sysupgrade.conf
+## This file contains files and directories that should
+## be preserved during an upgrade.
+
+# /etc/example.conf
+# /etc/openvpn/
+
+/etc/AdGuardHome.yaml
 EOF1
 
 exit 0
