@@ -27,6 +27,25 @@ hook_target_b() {
     #### luci-app-oaf
     git clone https://github.com/destan19/OpenAppFilter.git openwrt/package/t2/OpenAppFilter
 
+    #### default-settings
+    cat <<EOF >openwrt/package/base-files/files/etc/uci-defaults/bb-default-settings
+####################################
+# /etc/sysupgrade.conf
+####
+cp /etc/sysupgrade.conf /etc/sysupgrade.conf.bak
+cat <<EOF1 >/etc/sysupgrade.conf
+## This file contains files and directories that should
+## be preserved during an upgrade.
+
+# /etc/example.conf
+# /etc/openvpn/
+
+/etc/AdGuardHome.yaml
+EOF1
+
+exit 0
+EOF
+
     cp user/t2/.config openwrt/.config
 
     echo 'hook_target_b end'

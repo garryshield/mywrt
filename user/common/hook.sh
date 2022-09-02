@@ -12,7 +12,7 @@ hook_common_b() {
     pwd
 
     #### default-settings
-    cat <<EOF >openwrt/package/base-files/files/etc/uci-defaults/9999-default-settings
+    cat <<EOF >openwrt/package/base-files/files/etc/uci-defaults/aa-default-settings
 ####################################
 # /etc/config/network
 ####
@@ -61,20 +61,6 @@ cat <<EOF1 >/etc/banner
 --------------------------------------------------------------
 \${TMP_D} \${TMP_NEW}
 --------------------------------------------------------------
-EOF1
-
-####################################
-# /etc/sysupgrade.conf
-####
-cp /etc/sysupgrade.conf /etc/sysupgrade.conf.bak
-cat <<EOF1 >/etc/sysupgrade.conf
-## This file contains files and directories that should
-## be preserved during an upgrade.
-
-# /etc/example.conf
-# /etc/openvpn/
-
-/etc/AdGuardHome.yaml
 EOF1
 
 exit 0
