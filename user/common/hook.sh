@@ -8,6 +8,14 @@ hook_common_a() {
     env
 
     echo $MATRIX_ID
+
+    cat <<EOF >sdsd.text
+    $MATRIX_ID
+EOF
+
+    ls -al ./
+    cat sdsd.text
+
 }
 
 hook_common_b() {
