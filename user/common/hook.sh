@@ -8,6 +8,7 @@ hook_common_a() {
     env
 
     echo $REPO_URL
+    echo $DATE
 }
 
 hook_common_b() {
