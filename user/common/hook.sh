@@ -9,12 +9,12 @@ hook_common_a() {
 
     echo $MATRIX_ID
 
-    cat <<EOF >sdsd.text
+    cat <<EOF >test.md
 TMP_NEW="\${TMP_OLD} (${MATRIX_ID}) Compiled By GarryShield"
 EOF
 
     ls -al ./
-    cat sdsd.text
+    cat test.md
 
 }
 
