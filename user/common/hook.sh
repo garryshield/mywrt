@@ -4,6 +4,10 @@
 
 hook_common_a() {
     echo 'hook_common_a'
+
+    env
+
+    echo $REPO_URL
 }
 
 hook_common_b() {

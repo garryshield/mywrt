@@ -1,0 +1,41 @@
+name: TEST
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "CHANGELOG.md"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [t1, t2]
+
+    name: Build ${{matrix.target}}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+
+      - name: Set Env
+        run: |
+          source "user/common/env"
+          source "user/${{matrix.target}}/env"
+
+          echo "DATE=${DATE}"                                   >> $GITHUB_ENV
+          echo "REPO_URL=${REPO_URL}"                           >> $GITHUB_ENV
+          echo "REPO_BRANCH=${REPO_BRANCH}"                     >> $GITHUB_ENV
+
+          cat $GITHUB_ENV
+
+      - name: hook a
+        run: |
+          source "user/common/hook.sh"
+          hook_common_a
+          source "user/${{matrix.target}}/hook.sh"
+          hook_target_a
