@@ -5,6 +5,7 @@
 hook_common_a() {
     echo 'hook_common_a'
 
+    pwd
     env
 
     echo $MATRIX_ID
@@ -15,7 +16,6 @@ EOF
 
     ls -al ./
     cat test.md
-
 }
 
 hook_common_b() {
